@@ -1,17 +1,18 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-  $user = 'u47669';
+  $user = '47669';
   $pass = '7643625';
   $db = new PDO('mysql:host=localhost;dbname=u47669', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
   if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $messages = array();
   if (!empty($_COOKIE['save'])) {
- 
+    // Удаляем куку, указывая время устаревания в прошлом.
     setcookie('save', '', 1);
     setcookie('login', '', 1);
     setcookie('pass', '', 1);
+    // Выводим сообщение пользователю.
     $messages[] = 'Спасибо, результаты сохранены.<br>';
     if (!empty($_COOKIE['pass'])) {
       $messages[] = sprintf('Вы можете <a href="login.php">войти</a> с логином <strong>%s</strong>
@@ -89,17 +90,18 @@ header('Content-Type: text/html; charset=UTF-8');
     }
   }
 
+  // если есть кука сессии, начали сессию и ранее в сессию записан логин.
   if (!empty($_COOKIE[session_name()]) &&
   session_start() && !empty($_SESSION['login'])) {
     // загружаем данные пользователя из БД
     // и заполняем переменную $values
     try{
-      $sth = $db->prepare("SELECT id FROM users5 WHERE login = ?");
+      $sth = $db->prepare("SELECT id FROM users6 WHERE login = ?");
       $sth->execute(array($_SESSION['login']));
-      $user_id = ($sth->fetchAll(PDO::FETCH_COLUMN, 0))['0']; 
-      $sth = $db->prepare("SELECT * FROM application5 WHERE id = ?");
+      $user_id = ($sth->fetchAll(PDO::FETCH_COLUMN, 0))['0']; //извлечение всех значений первого столбца
+      $sth = $db->prepare("SELECT * FROM application6 WHERE id = ?");
       $sth->execute(array($user_id));
-      $user_data = ($sth->fetchAll(PDO::FETCH_ASSOC))['0']; 
+      $user_data = ($sth->fetchAll(PDO::FETCH_ASSOC)); //только одна строка, тк все логины разные
 
       foreach ($user_data as $key=>$val){
         $values[$key] = $val;
@@ -123,7 +125,9 @@ header('Content-Type: text/html; charset=UTF-8');
 
 else {
   $errors = FALSE;
+// ИМЯ
 if (empty($_POST['name'])) {
+    
     setcookie('name_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
   }
@@ -132,8 +136,10 @@ if (empty($_POST['name'])) {
     $errors = TRUE;
   }
   else {
+  
     setcookie('name_value', $_POST['name'], time() + 30 * 24 * 60 * 60);
   }
+
   if (empty($_POST['email'])){
     setcookie('email_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -145,6 +151,8 @@ if (empty($_POST['name'])) {
   else {
     setcookie('email_value', $_POST['email'], time() + 30 * 24 * 60 * 60);
   }
+
+
   if ($_POST['year']=='') {
     setcookie('year_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -153,6 +161,7 @@ if (empty($_POST['name'])) {
     setcookie('year_value', $_POST['year'], time() + 30 * 24 * 60 * 60);
   }
 
+
   if (empty($_POST['gender'])) {
     setcookie('gender_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -160,6 +169,8 @@ if (empty($_POST['name'])) {
   else{
   setcookie('gender_value', $_POST['gender'], time() + 30 * 24 * 60 * 60);
   }
+
+
   if (empty($_POST['kon'])) {
     setcookie('kon_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -167,9 +178,12 @@ if (empty($_POST['name'])) {
   else {
     setcookie('kon_value', $_POST['kon'], time() + 30 * 24 * 60 * 60);
   }
+
+
   $super=array();
   if(empty($_POST['super'])){
     setcookie('super_error', ' ', time() + 24 * 60 * 60);
+
     $errors = TRUE;
   }
   else{
@@ -178,6 +192,8 @@ if (empty($_POST['name'])) {
     }
     setcookie('super_value', serialize($super), time() + 30 * 24 * 60 * 60);
   }
+
+
   if (empty($_POST['bio'])) {
     setcookie('bio_error', ' ', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -185,6 +201,7 @@ if (empty($_POST['name'])) {
   else {
     setcookie('bio_value', $_POST['bio'], time() + 30 * 24 * 60 * 60);
   }
+
 
   if (empty($_POST['contr_check'])) {
     setcookie('contr_check_error', ' ', time() + 24 * 60 * 60);
@@ -200,25 +217,26 @@ if (empty($_POST['name'])) {
     exit();
   }
   else {
-    setcookie('name_error', '', 100000);
-    setcookie('email_error', '', 100000);
-    setcookie('year_error', '', 100000);
-    setcookie('gender_error', '', 100000);
-    setcookie('kon_error', '', 100000);
-    setcookie('super_error', '', 100000);
-    setcookie('bio_error', '', 100000);
-    setcookie('contr_check_error', '', 100000);
+    setcookie('name_error', '', 1);
+    setcookie('email_error', '', 1);
+    setcookie('year_error', '', 1);
+    setcookie('gender_error', '', 1);
+    setcookie('kon_error', '', 1);
+    setcookie('super_error', '', 1);
+    setcookie('bio_error', '', 1);
+    setcookie('contr_check_error', '', 1);
   }
 
-  // Проверяем, меняются ли ранее сохраненные данные или отправляются новые.
+
   if (!empty($_COOKIE[session_name()]) &&
       session_start() && !empty($_SESSION['login'])) {
+   
     try {
-      $stmt = $db->prepare("SELECT id FROM users5 WHERE login =?");
+      $stmt = $db->prepare("SELECT id FROM users6 WHERE login =?");
       $stmt -> execute(array($_SESSION['login'] ));
       $user_id = ($stmt->fetchAll(PDO::FETCH_COLUMN))['0'];
 
-      $stmt = $db->prepare("UPDATE application5 SET name = ?, email = ?, year = ?, gender = ?, kon = ?, bio = ? WHERE id =?");
+      $stmt = $db->prepare("UPDATE application6 SET name = ?, email = ?, year = ?, gender = ?, kon = ?, bio = ? WHERE id =?");
       $stmt -> execute(array(
           $_POST['name'],
           $_POST['email'],
@@ -228,9 +246,10 @@ if (empty($_POST['name'])) {
           $_POST['bio'],
           $user_id,
       ));
-      $sth = $db->prepare("DELETE FROM Superpowers5 WHERE id = ?");
+      //удаляем старые данные о способностях и заполняем новыми
+      $sth = $db->prepare("DELETE FROM Superpowers6 WHERE id = ?");
       $sth->execute(array($user_id));
-      $stmt = $db->prepare("INSERT INTO Superpowers5 SET id = ?, superpowers = ?");
+      $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
       foreach($_POST['super'] as $s){
           $stmt -> execute(array(
             $user_id,
@@ -244,7 +263,8 @@ if (empty($_POST['name'])) {
     }
   }
   else {
-    $sth = $db->prepare("SELECT login FROM users5");
+    // Генерируем уникальный логин и пароль.
+    $sth = $db->prepare("SELECT login FROM users6");
     $sth->execute();
     $login_array = $sth->fetchAll(PDO::FETCH_COLUMN);
     $flag=true;
@@ -262,7 +282,7 @@ if (empty($_POST['name'])) {
 
     // Сохранение данных формы, логина и хеш пароля в базу данных.
     try {
-      $stmt = $db->prepare("INSERT INTO application5 SET name = ?, email = ?, year = ?, gender = ?, kon = ?, bio = ?");//, login = ?, password = ?
+      $stmt = $db->prepare("INSERT INTO application6 SET name = ?, email = ?, year = ?, gender = ?, kon = ?, bio = ?");//, login = ?, password = ?
       $stmt -> execute(array(
           $_POST['name'],
           $_POST['email'],
@@ -275,14 +295,14 @@ if (empty($_POST['name'])) {
 
       $id_db = $db->lastInsertId();
       //реализация атомарности
-      $stmt = $db->prepare("INSERT INTO Superpowers5 SET id = ?, superpowers = ?");
+      $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
       foreach($_POST['super'] as $s){
           $stmt -> execute(array(
             $id_db,
             $s,
           ));
         }
-      $stmt = $db->prepare("INSERT INTO users5 SET login = ?, pass = ?");
+      $stmt = $db->prepare("INSERT INTO users6 SET login = ?, pass = ?");
       $stmt -> execute(array(
           $login,
           $hash,
