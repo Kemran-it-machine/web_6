@@ -4,7 +4,7 @@ header('Content-Type: text/html; charset=UTF-8');
 function change_pass($db){session_start(); 
   $login_ch = $_POST['user_login'];
   $old_pass = $_POST['old_pass'];
-  $new_pass  =$_POST['new_pass'];
+  $new_pass =$_POST['new_pass'];
 
   $stmt = $db->prepare("SELECT * FROM users6 WHERE login = ?");
     $stmt->execute(array(
@@ -42,11 +42,10 @@ function change_pass($db){session_start();
 
 session_start();
 
-$db_user = '47669';   // Логин БД
-$db_pass = '7643625';  // Пароль БД
+$db_user = 'u47669';   
+$db_pass = '7643625';  
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  //реализация выхода из аккаунта и завершения сессии  
   if(isset($_GET['do'])&&$_GET['do'] == 'logout'){
     session_start();    
     session_unset();
