@@ -4,10 +4,10 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="style.css">
-  <title> Web_Back_5 </title>
+  <title> Web_Back_6 </title>
 </head>
 <body>
-		<h1> Добро пожаловать</h1>
+		<h1>Добро пожаловать</h1>
 	</div>
 	<?php 
 		if (!empty($messages)) {
@@ -56,13 +56,13 @@
 
 			<p><label for="bio"><strong>Биография:   <strong></label> <br> <br>
 			<textarea id="bio" name="bio" <?php if(!empty($errors['bio']))  print 'class="error"';?> <?php if(empty($errors['bio'])&&!empty($values['bio'])) print 'class="ok"';?>><?php isset($_COOKIE['bio_error']) ? print trim($_COOKIE['bio_error']) : print $values['bio'] ?></textarea>
-		
+			
 			<p> <input type="checkbox" id="contr_check" name="contr_check" value="contr_check" <?php if (isset($values['contr_check'])&&$values['contr_check'] == 'contr_check') print("checked"); ?>>
       <label <?php if(!empty($errors['contr_check'])) print 'class="error_check"'?>><strong>С контрактом ознакомлен(-а):</strong></label>
 			</p>
 			
-			<p><button type="submit" value="send"> Отправить</button></p>
-
+			<p><button type="submit" value="send"> Отправить</button></p> <br> <br> <br> <br> <br> <br>
+			Уже отправляли форму? <a href="login.php"> <strong> Войдите </strong> </a><br> <br>
 		</form>
 		<?php if(!empty($_COOKIE[session_name()]) && !empty($_SESSION['login'])) print( '<div id="footer">Вход с логином ' . $_SESSION["login"]. '<br> <a href=login.php?do=logout> Выход</a><br></div>');?>
 </body>
