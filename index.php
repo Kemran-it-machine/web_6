@@ -93,8 +93,6 @@ header('Content-Type: text/html; charset=UTF-8');
   // если есть кука сессии, начали сессию и ранее в сессию записан логин.
   if (!empty($_COOKIE[session_name()]) &&
   session_start() && !empty($_SESSION['login'])) {
-    // загружаем данные пользователя из БД
-    // и заполняем переменную $values
     try{
       $sth = $db->prepare("SELECT id FROM users6 WHERE login = ?");
       $sth->execute(array($_SESSION['login']));
@@ -246,7 +244,7 @@ if (empty($_POST['name'])) {
           $_POST['bio'],
           $user_id,
       ));
-      //удаляем старые данные о способностях и заполняем новыми
+      
       $sth = $db->prepare("DELETE FROM Superpowers6 WHERE id = ?");
       $sth->execute(array($user_id));
       $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
@@ -280,7 +278,7 @@ if (empty($_POST['name'])) {
     setcookie('login', $login);
     setcookie('pass', $pass);
 
-    // Сохранение данных формы, логина и хеш пароля в базу данных.
+    
     try {
       $stmt = $db->prepare("INSERT INTO application6 SET name = ?, email = ?, year = ?, gender = ?, kon = ?, bio = ?");//, login = ?, password = ?
       $stmt -> execute(array(
@@ -294,7 +292,7 @@ if (empty($_POST['name'])) {
       );
 
       $id_db = $db->lastInsertId();
-      //реализация атомарности
+      
       $stmt = $db->prepare("INSERT INTO Superpowers6 SET id = ?, superpowers = ?");
       foreach($_POST['super'] as $s){
           $stmt -> execute(array(
