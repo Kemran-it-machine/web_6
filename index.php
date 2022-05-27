@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-  $user = '47669';
+  $user = 'u47669';
   $pass = '7643625';
   $db = new PDO('mysql:host=localhost;dbname=u47669', $user, $pass, array(PDO::ATTR_PERSISTENT => true));
 
